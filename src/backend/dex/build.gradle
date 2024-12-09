@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.3'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'jacoco'  // Apply Jacoco plugin for code coverage
+}
+
+group = 'com.5619'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.xerial:sqlite-jdbc:3.46.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'  // Includes JUnit and MockMvc
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'org.springframework.security:spring-security-core:5.8.0'
+    implementation 'org.hibernate:hibernate-core:5.6.0.Final'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+
+    // Disable parallel execution of tests
+    systemProperty 'junit.jupiter.execution.parallel.enabled', 'false'
+
+    finalizedBy jacocoTestReport  // Ensure Jacoco report is generated after tests run
+}
+
+jacoco {
+    toolVersion = "0.8.12"  // Use the latest stable version of Jacoco
+}
+//
+jacocoTestReport {
+    reports {
+        xml.required.set(true)  // Ensure XML report is generated
+        html.required.set(true)  // Ensure HTML report is generated
+    }
+}
